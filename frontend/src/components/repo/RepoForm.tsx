@@ -26,7 +26,7 @@ const RepoForm = ({ id, name, onCreated, onUpdated }: IRepoForm): JSX.Element =>
   return (
     <div className="shadow-lg p-4">
       <input
-        className="shadow appearance-none border rounded w-64 mr-4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow appearance-none border rounded w-64 mr-4 py-2 px-3 text-gray-700 leading-tight"
         type="text"
         value={repoName}
         placeholder="Please enter repo name."

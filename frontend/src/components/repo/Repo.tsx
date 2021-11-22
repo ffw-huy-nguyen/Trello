@@ -22,12 +22,16 @@ const Repo = (): JSX.Element => {
   const handleCreatedNewRepo = (repo: IRepo): void => {
     setRepos([...repos, repo]);
   };
+
+  const handleDeletedRepo = (id: string): void => {
+    setRepos(repos.filter((repo) => repo.id !== id));
+  };
   return (
     <>
       <h1 className="font-bold text-3xl px-4">Repo List</h1>
       <div>
         {repos.map((item) => {
-          return <RepoDetail {...item} key={`repo_${item.id}`} />;
+          return <RepoDetail onDeleted={handleDeletedRepo} {...item} key={`repo_${item.id}`} />;
         })}
       </div>
       <h2 className="font-bold text-3xl px-4">Create new Repo</h2>
