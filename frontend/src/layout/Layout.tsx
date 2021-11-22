@@ -2,7 +2,7 @@ import React, { FunctionComponent, ReactNode } from 'react';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="container">
+    <div className="container mx-auto">
       <main role="main">{children}</main>
     </div>
   );
