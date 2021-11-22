@@ -18,6 +18,10 @@ const Repo = (): JSX.Element => {
     };
     getItems();
   }, []);
+
+  const handleCreatedNewRepo = (repo: IRepo): void => {
+    setRepos([...repos, repo]);
+  };
   return (
     <>
       <h1 className="font-bold text-3xl px-4">Repo List</h1>
@@ -28,7 +32,7 @@ const Repo = (): JSX.Element => {
       </div>
       <h2 className="font-bold text-3xl px-4">Create new Repo</h2>
       <div>
-        <RepoForm id="" name="" />
+        <RepoForm onCreated={handleCreatedNewRepo} id="" name="" />
       </div>
     </>
   );
