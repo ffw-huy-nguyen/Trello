@@ -5,3 +5,11 @@
 svg {
   @apply inline-block;
 }
+
+.btn {
+  @apply bg-orange hover:bg-white text-white hover:text-orange font-bold py-2 px-4 rounded border;
+}
+
+.btn--cancel {
+  @apply opacity-75;
+}

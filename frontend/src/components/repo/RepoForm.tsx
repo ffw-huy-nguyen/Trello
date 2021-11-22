@@ -4,9 +4,18 @@ import API from '../../api/Repo';
 
 interface IRepoForm extends IRepo {
   onCreated?(newRepo: IRepo): void;
-  onUpdated?(id: string): void;
+  onUpdated?(name: string): void;
+  onCanceled?(): void;
+  editing?: boolean;
 }
-const RepoForm = ({ id, name, onCreated, onUpdated }: IRepoForm): JSX.Element => {
+const RepoForm = ({
+  id,
+  name,
+  onCreated,
+  onUpdated,
+  onCanceled,
+  editing
+}: IRepoForm): JSX.Element => {
   const [repoId] = useState(id);
   const [repoName, setRepoName] = useState(name);
   const handleSaveRepo = async (): Promise<void> => {
@@ -15,8 +24,8 @@ const RepoForm = ({ id, name, onCreated, onUpdated }: IRepoForm): JSX.Element =>
       return;
     }
     if (repoId) {
-      await API.updateItem(repoId, { name: repoName });
-      onUpdated && onUpdated(repoId);
+      await API.updateItem(repoId, { name: repoName, id });
+      onUpdated && onUpdated(repoName);
     } else {
       const newRepo = await API.createItem<IRepo, { name: string }>({ name: repoName });
       onCreated && onCreated(newRepo);
@@ -33,12 +42,14 @@ const RepoForm = ({ id, name, onCreated, onUpdated }: IRepoForm): JSX.Element =>
         onChange={(e) => setRepoName(e.target.value)}
         aria-label="Enter repo name."
       />
-      <button
-        className="bg-orange hover:bg-white text-white hover:text-orange font-bold py-2 px-4 rounded border border-orange"
-        aria-label="Submit repo."
-        onClick={handleSaveRepo}>
+      <button className="btn" aria-label="Submit repo." onClick={handleSaveRepo}>
         Save
       </button>
+      {editing && (
+        <button className="btn btn--cancel" aria-label="Submit repo." onClick={onCanceled}>
+          Cancel
+        </button>
+      )}
     </div>
   );
 };
