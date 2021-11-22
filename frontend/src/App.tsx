@@ -1,10 +1,13 @@
 import React from 'react';
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Repo from './components/Repo';
 const App = (): JSX.Element => {
   return (
-    <div>
-      <h1 className="text-blue-300">Hello World</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Repo />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
