@@ -1,6 +1,13 @@
 import axios from 'axios';
 import config from '../../config';
 
+export interface IBaseApi {
+  getItems<R>(): Promise<R>;
+  getItem<R>(uuid: string): Promise<R>;
+  updateItem<R, D>(uuid: string, data: D): Promise<R>;
+  createItem<R, D>(data: D): Promise<R>;
+  deleteItem(uuid: string): Promise<void>;
+}
 class Base {
   http = axios.create({
     baseURL: config.apiUrl

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withLayout } from '../../layout/Layout';
 import API from '../../api/Repo';
 import RepoDetail from './RepoDetail';
-import RepoForm from './RepoForm';
+import ItemForm from '../InputField';
 
 export interface IRepo {
   id: string;
@@ -36,7 +36,7 @@ const Repo = (): JSX.Element => {
       </div>
       <h2 className="font-bold text-3xl px-4">Create new Repo</h2>
       <div>
-        <RepoForm onCreated={handleCreatedNewRepo} id="" name="" />
+        <ItemForm onCreated={handleCreatedNewRepo} id="" name="" inputName="Repo" api={API} />
       </div>
     </>
   );

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { IRepo } from './Repo';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import API from '../../api/Repo';
-import RepoForm from './RepoForm';
 import classnames from 'classnames';
+import ItemForm from '../InputField';
 interface IRepoDetail extends IRepo {
   onDeleted(id: string): void;
 }
@@ -27,12 +27,14 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
       <div>
         <h3 className="text-2xl font-bold">{repoName}</h3>
         <div className={classnames(!editing && 'hidden')}>
-          <RepoForm
+          <ItemForm
             id={id}
             name={repoName}
             editing={true}
             onUpdated={handleUpdatedRepo}
             onCanceled={() => setEditing(false)}
+            inputName="Repo"
+            api={API}
           />
         </div>
       </div>
