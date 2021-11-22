@@ -3,7 +3,7 @@ import { IRepo } from './Repo';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import API from '../../api/Repo';
 import classnames from 'classnames';
-import ItemForm from '../InputField';
+import ItemForm from '../field/InputField';
 interface IRepoDetail extends IRepo {
   onDeleted(id: string): void;
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { IBaseApi } from '../api/Base';
-import { IItem } from '../interfaces/global.interface';
+import { IBaseApi } from '../../api/Base';
+import { IItem } from '../../interfaces/global.interface';
 
-const ItemForm = ({
+const InputField = ({
   id,
   name,
   onCreated,
@@ -46,13 +46,19 @@ const ItemForm = ({
         placeholder={`Please enter ${inputName} name.`}
         onChange={(e) => setItemName(e.target.value)}
         aria-label={`Enter ${inputName} name.`}
+        data-testid="input-field"
       />
-      <button className="btn" aria-label={`Submit ${inputName} name.`} onClick={handleSaveItem}>
+      <button
+        className="btn"
+        data-testid="save-button"
+        aria-label={`Submit ${inputName} name.`}
+        onClick={handleSaveItem}>
         Save
       </button>
       {editing && (
         <button
           className="btn btn--cancel"
+          data-testid="cancel-button"
           aria-label={`Submit ${inputName}.`}
           onClick={onCanceled}>
           Cancel
@@ -62,4 +68,4 @@ const ItemForm = ({
   );
 };
 
-export default ItemForm;
+export default InputField;

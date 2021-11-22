@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withLayout } from '../../layout/Layout';
 import API from '../../api/Repo';
 import RepoDetail from './RepoDetail';
-import ItemForm from '../InputField';
+import ItemForm from '../field/InputField';
 
 export interface IRepo {
   id: string;
