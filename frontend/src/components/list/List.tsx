@@ -8,8 +8,8 @@ export interface IList {
 }
 const List = ({ cards, id, title }: IList): JSX.Element => {
   return (
-    <div>
-      <h3>{title}</h3>
+    <div className="bg-grey p-5 rounded">
+      <h3 className="font-bold text-xl mb-5">{title}</h3>
       {cards.map((card) => {
         return <Card {...card} key={card.id} />;
       })}

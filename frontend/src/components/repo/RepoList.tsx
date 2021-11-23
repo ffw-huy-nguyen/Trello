@@ -20,7 +20,7 @@ const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
   };
   return (
     <>
-      <h1 className="font-bold text-3xl px-4">Repo List</h1>
+      <h1 className="h1">Repo List</h1>
       <div data-testid="repo-list">
         {repos.length > 0 ? (
           <>
@@ -34,7 +34,7 @@ const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
           </>
         )}
       </div>
-      <h2 className="font-bold text-3xl px-4">Create new Repo</h2>
+      <h2 className="h1">Create new Repo</h2>
       <div>
         <ItemForm onCreated={handleCreatedNewRepo} id="" name="" inputName="Repo" api={API} />
       </div>
