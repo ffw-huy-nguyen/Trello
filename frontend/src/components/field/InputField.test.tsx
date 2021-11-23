@@ -1,43 +1,30 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import user from '@testing-library/user-event';
+
 import '@testing-library/jest-dom';
 import 'regenerator-runtime/runtime';
 import InputField from './InputField';
+import BaseApi from '../../api/Base';
 
 global.alert = jest.fn();
 
 const item = {
-  id: 1,
+  id: 'uuid-1111',
   name: 'Item 1'
 };
 
-const mockApi = {
-  createItem: jest.fn((item) => {
-    return new Promise((resolve) => {
-      resolve({
-        ...item,
-        id: 1
-      });
-    });
-  }),
-  updateItem: jest.fn((id, item) => {
-    return new Promise((resolve) => {
-      resolve({
-        ...item,
-        id
-      });
-    });
-  })
-};
+jest.mock('../../api/Base');
+const mockApi = new BaseApi('test');
 
 const mockOnCreated = jest.fn((data) => data);
 const mockOnUpdated = jest.fn((data) => data);
 
 describe('InputField', () => {
   test('renders field for creating new item', () => {
-    render(<InputField id="0" name="" inputName="Test Input" api={null} />);
+    render(<InputField id="0" name="" inputName="Test Input" api={mockApi} />);
     const input = screen.getByTestId('input-field');
-    expect(input.value).toBe('');
+    expect((input as HTMLInputElement).value).toBe('');
 
     const saveButton = screen.getByTestId('save-button');
     expect(saveButton).toBeInTheDocument();
@@ -47,10 +34,10 @@ describe('InputField', () => {
   });
 
   test('renders field for updating item', () => {
-    render(<InputField {...item} editing={true} inputName="Test Input" api={null} />);
+    render(<InputField {...item} editing={true} inputName="Test Input" api={mockApi} />);
 
     const input = screen.getByTestId('input-field');
-    expect(input.value).toBe(item.name);
+    expect((input as HTMLInputElement).value).toBe(item.name);
 
     const saveButton = screen.getByTestId('save-button');
     expect(saveButton).toBeInTheDocument();
@@ -62,9 +49,9 @@ describe('InputField', () => {
 
 describe('Create new item', () => {
   test('submit without enter name', () => {
-    render(<InputField id="0" name="" inputName="Test Input" api={null} />);
+    render(<InputField id="0" name="" inputName="Test Input" api={mockApi} />);
     const saveButton = screen.getByTestId('save-button');
-    fireEvent.click(saveButton);
+    user.click(saveButton);
     expect(global.alert).toHaveBeenCalledTimes(1);
   });
 
@@ -72,45 +59,42 @@ describe('Create new item', () => {
     render(
       <InputField id="" name="" onCreated={mockOnCreated} inputName="Test Input" api={mockApi} />
     );
-
-    let input = screen.getByTestId('input-field');
+    const input = screen.getByTestId('input-field');
     fireEvent.change(input, {
       target: {
         value: item.name
       }
     });
 
-    expect(input.value).toBe(item.name);
-
+    expect((input as HTMLInputElement).value).toBe(item.name);
     const saveButton = screen.getByTestId('save-button');
-    fireEvent.click(saveButton);
 
-    expect(await mockApi.createItem).toHaveBeenCalledTimes(1);
-    expect(mockOnCreated).toHaveBeenCalledWith({ id: 1, name: item.name });
+    user.click(saveButton);
 
-    input = screen.getByTestId('input-field');
-    expect(input.value).toBe('');
+    await waitFor(() => expect(mockApi.createItem).toHaveBeenCalledTimes(1));
+    expect(mockOnCreated).toHaveBeenCalledTimes(1);
+    expect((input as HTMLInputElement).value).toBe('');
   });
 });
 
 describe('Update existing item', () => {
   test('submit without enter name', () => {
-    render(<InputField {...item} inputName="Test Input" api={null} />);
-    let input = screen.getByTestId('input-field');
+    render(<InputField {...item} inputName="Test Input" api={mockApi} />);
+    const input = screen.getByTestId('input-field');
     fireEvent.change(input, {
       target: {
         value: ''
       }
     });
     const saveButton = screen.getByTestId('save-button');
-    fireEvent.click(saveButton);
+    user.click(saveButton);
     expect(global.alert).toHaveBeenCalledTimes(2);
   });
 
   test('submit with correct name', async () => {
     render(<InputField {...item} onUpdated={mockOnUpdated} inputName="Test Input" api={mockApi} />);
 
-    let input = screen.getByTestId('input-field');
+    const input = screen.getByTestId('input-field');
     const updatedName = 'New name';
     fireEvent.change(input, {
       target: {
@@ -118,12 +102,11 @@ describe('Update existing item', () => {
       }
     });
 
-    expect(input.value).toBe(updatedName);
+    expect((input as HTMLInputElement).value).toBe(updatedName);
 
     const saveButton = screen.getByTestId('save-button');
-    fireEvent.click(saveButton);
-
-    expect(await mockApi.createItem).toHaveBeenCalledTimes(1);
-    expect(mockOnUpdated).toHaveBeenCalledWith(updatedName);
+    user.click(saveButton);
+    await waitFor(() => expect(mockApi.createItem).toHaveBeenCalledTimes(1));
+    expect(mockOnUpdated).toHaveBeenCalledTimes(1);
   });
 });
