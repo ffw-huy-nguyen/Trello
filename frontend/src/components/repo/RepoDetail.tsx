@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { IRepo } from './Repo';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import API from '../../api/Repo';
-import classnames from 'classnames';
 import ItemForm from '../field/InputField';
 interface IRepoDetail extends IRepo {
   onDeleted(id: string): void;
@@ -25,28 +24,38 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
   return (
     <div className="bg-white shadow-lg p-10 rounded-lg mb-5 flex justify-between">
       <div>
-        <h3 className="text-2xl font-bold">{repoName}</h3>
-        <div className={classnames(!editing && 'hidden')}>
-          <ItemForm
-            id={id}
-            name={repoName}
-            editing={true}
-            onUpdated={handleUpdatedRepo}
-            onCanceled={() => setEditing(false)}
-            inputName="Repo"
-            api={API}
-          />
-        </div>
+        <h3 data-testid="repo-name" className="text-2xl font-bold">
+          {repoName}
+        </h3>
+        {editing && (
+          <>
+            <div data-testid="editing-form">
+              <ItemForm
+                id={id}
+                name={repoName}
+                editing={true}
+                onUpdated={handleUpdatedRepo}
+                onCanceled={() => setEditing(false)}
+                inputName="Repo"
+                api={API}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <div className="text-orange">
         <button
           className="mr-2"
           aria-label={`Update ${repoName} repo.`}
-          onClick={() => setEditing(true)}>
+          onClick={() => setEditing(true)}
+          data-testid="update-btn">
           <FaEdit />
         </button>
-        <button aria-label={`Delete ${repoName} repo.`} onClick={handleDeleteRepo}>
+        <button
+          aria-label={`Delete ${repoName} repo.`}
+          data-testid="delete-btn"
+          onClick={handleDeleteRepo}>
           <FaTrash />
         </button>
       </div>
