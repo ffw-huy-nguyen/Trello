@@ -26,7 +26,7 @@ const Board = (): JSX.Element => {
   return (
     <div>
       <h1 className="h1 mb-5">Board: {repoName}</h1>
-      <div className="flex gap-6">
+      <div className="grid grid-cols-4 gap-6">
         {lists.map((list) => {
           return <List {...list} key={list.id} />;
         })}

@@ -18,7 +18,8 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
     }
   };
 
-  const handleUpdatedRepo = (name: string): void => {
+  const handleUpdatedRepo = async (name: string): Promise<void> => {
+    await API.updateItem(id, { id, name });
     setRepoName(name);
     setEditing(false);
   };
@@ -26,7 +27,7 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
     <div className="bg-white shadow-lg p-10 rounded-lg mb-5 flex justify-between">
       <div>
         <h3 data-testid="repo-name" className="text-2xl font-bold">
-          <Link to={`/${id}`}>{repoName}</Link>
+          {repoName}
         </h3>
         {editing && (
           <>

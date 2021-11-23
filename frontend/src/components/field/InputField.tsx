@@ -29,7 +29,6 @@ const InputField = ({
       return;
     }
     if (itemId) {
-      await api.updateItem(itemId, { name: itemName, id });
       onUpdated && onUpdated(itemName);
     } else {
       onCreated && onCreated(itemName);
@@ -39,7 +38,7 @@ const InputField = ({
   return (
     <div className="shadow-lg p-4">
       <input
-        className="shadow appearance-none border rounded w-64 mr-4 py-2 px-3 text-gray-700 leading-tight"
+        className="shadow appearance-none border rounded w-64 max-w-full mr-4 py-2 px-3 text-gray-700 leading-tight mb-3"
         type="text"
         value={itemName}
         placeholder={`Please enter ${inputName} name.`}
@@ -52,7 +51,7 @@ const InputField = ({
         data-testid="save-button"
         aria-label={`Submit ${inputName} name.`}
         onClick={handleSaveItem}>
-        Save
+        {itemId ? 'Update' : 'Add'}
       </button>
       {editing && (
         <button

@@ -13,11 +13,15 @@ const List = ({ cards, id, title }: IList): JSX.Element => {
     const newCard = await API.createCard({ listId: id, text: name });
     setListCards([...listCards, newCard]);
   };
+
+  const handleDeletedCard = (id: string) => {
+    setListCards(listCards.filter((card) => card.id !== id));
+  };
   return (
     <div className="bg-grey p-5 rounded">
       <h3 className="font-bold text-xl mb-5">{title}</h3>
       {listCards.map((card) => {
-        return <Card {...card} key={card.id} />;
+        return <Card onDeleted={handleDeletedCard} {...card} key={card.id} />;
       })}
       <ItemForm onCreated={handleCreatedNewCard} id="" name="" inputName="Card" api={API} />
     </div>
