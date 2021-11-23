@@ -3,14 +3,16 @@ import { IRepo } from './Repo';
 import RepoDetail from './RepoDetail';
 import ItemForm from '../field/InputField';
 import API from '../../api/Repo';
+import { IItem } from '../../interfaces/global.interface';
 
 interface IRepoList {
   repos: IRepo[];
   handleUpdateRepos(repos: IRepo[]): void;
 }
 const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
-  const handleCreatedNewRepo = (repo: IRepo): void => {
-    handleUpdateRepos([...repos, repo]);
+  const handleCreatedNewRepo = async (name: string): Promise<void> => {
+    const newItem = await API.createItem<IItem, { name: string }>({ name });
+    handleUpdateRepos([...repos, newItem]);
   };
 
   const handleDeletedRepo = (id: string): void => {

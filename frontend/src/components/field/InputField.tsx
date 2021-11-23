@@ -14,7 +14,7 @@ const InputField = ({
 }: {
   id: string;
   name: string;
-  onCreated?(newItem: IItem): void;
+  onCreated?(name: string): void;
   onUpdated?(name: string): void;
   onCanceled?(): void;
   editing?: boolean;
@@ -32,8 +32,7 @@ const InputField = ({
       await api.updateItem(itemId, { name: itemName, id });
       onUpdated && onUpdated(itemName);
     } else {
-      const newItem = await api.createItem<IItem, { name: string }>({ name: itemName });
-      onCreated && onCreated(newItem);
+      onCreated && onCreated(itemName);
       setItemName('');
     }
   };
