@@ -19,6 +19,7 @@ const mockApi = new BaseApi('test');
 
 const mockOnCreated = jest.fn((data) => data);
 const mockOnUpdated = jest.fn((data) => data);
+const mockOnCanceled = jest.fn();
 
 describe('InputField', () => {
   test('renders field for creating new item', () => {
@@ -79,7 +80,7 @@ describe('Create new item', () => {
 
 describe('Update existing item', () => {
   test('submit without enter name', () => {
-    render(<InputField {...item} inputName="Test Input" api={mockApi} />);
+    render(<InputField {...item} editing={true} inputName="Test Input" api={mockApi} />);
     const input = screen.getByTestId('input-field');
     fireEvent.change(input, {
       target: {
@@ -92,7 +93,15 @@ describe('Update existing item', () => {
   });
 
   test('submit with correct name', async () => {
-    render(<InputField {...item} onUpdated={mockOnUpdated} inputName="Test Input" api={mockApi} />);
+    render(
+      <InputField
+        {...item}
+        editing={true}
+        onUpdated={mockOnUpdated}
+        inputName="Test Input"
+        api={mockApi}
+      />
+    );
 
     const input = screen.getByTestId('input-field');
     const updatedName = 'New name';
@@ -108,5 +117,20 @@ describe('Update existing item', () => {
     user.click(saveButton);
     await waitFor(() => expect(mockApi.createItem).toHaveBeenCalledTimes(1));
     expect(mockOnUpdated).toHaveBeenCalledTimes(1);
+  });
+
+  test('cancel button', () => {
+    render(
+      <InputField
+        {...item}
+        editing={true}
+        onCanceled={mockOnCanceled}
+        inputName="Test Input"
+        api={mockApi}
+      />
+    );
+    const saveButton = screen.getByTestId('cancel-button');
+    user.click(saveButton);
+    expect(mockOnCanceled).toHaveBeenCalledTimes(1);
   });
 });
