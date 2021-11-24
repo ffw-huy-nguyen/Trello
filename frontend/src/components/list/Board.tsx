@@ -3,12 +3,14 @@ import { useParams } from 'react-router-dom';
 import { withLayout } from '../../layout/Layout';
 import API from '../../api/Repo';
 import List, { IList } from './List';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 interface IBoard {
   name: string;
   id: string;
   lists: IList[];
 }
+
 const Board = (): JSX.Element => {
   const { id } = useParams();
   const [lists, setLists] = useState<IList[]>([]);
@@ -23,14 +25,36 @@ const Board = (): JSX.Element => {
     };
     getRepoDetail();
   }, []);
+
+  const handleOnDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    handleMoveCard(destination?.droppableId, source.droppableId, draggableId);
+  };
+
+  const handleMoveCard = async (
+    destination?: string,
+    source?: string,
+    draggableId?: string
+  ): Promise<void> => {
+    if (destination !== source) {
+      const newBoard = await API.moveCard(draggableId, destination, source, id);
+      console.log(newBoard.lists);
+      setLists(newBoard.lists);
+    }
+  };
   return (
     <div>
       <h1 className="h1 mb-5">Board: {repoName}</h1>
-      <div className="grid grid-cols-4 gap-6">
-        {lists.map((list) => {
-          return <List {...list} key={list.id} />;
-        })}
-      </div>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <div className="grid grid-cols-4 gap-6">
+          {lists.map((list) => {
+            return <List {...list} key={list.id} />;
+          })}
+        </div>
+      </DragDropContext>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Card, { ICard } from './Card';
 import ItemForm from '../field/InputField';
 import API from '../../api/Card';
+import { Draggable, DraggingStyle, Droppable, NotDraggingStyle } from 'react-beautiful-dnd';
 export interface IList {
   title: string;
   cards: ICard[];
@@ -17,12 +18,21 @@ const List = ({ cards, id, title }: IList): JSX.Element => {
   const handleDeletedCard = (id: string) => {
     setListCards(listCards.filter((card) => card.id !== id));
   };
+
   return (
     <div className="bg-grey p-5 rounded">
       <h3 className="font-bold text-xl mb-5">{title}</h3>
-      {listCards.map((card) => {
-        return <Card onDeleted={handleDeletedCard} {...card} key={card.id} />;
-      })}
+      <Droppable key={title} droppableId={id}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {listCards.map((card, index) => {
+              return <Card onDeleted={handleDeletedCard} {...card} index={index} key={card.id} />;
+            })}
+
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       <ItemForm onCreated={handleCreatedNewCard} id="" name="" inputName="Card" api={API} />
     </div>
   );
