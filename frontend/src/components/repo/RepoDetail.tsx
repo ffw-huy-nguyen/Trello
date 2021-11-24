@@ -27,7 +27,7 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
     <div className="bg-white shadow-lg p-10 rounded-lg mb-5 flex justify-between">
       <div>
         <h3 data-testid="repo-name" className="text-2xl font-bold">
-          {repoName}
+          <Link to={`/${id}`}>{repoName}</Link>
         </h3>
         {editing && (
           <>

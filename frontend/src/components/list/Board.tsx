@@ -59,7 +59,7 @@ const Board = (): JSX.Element => {
   };
   return (
     <div>
-      <h1 className="h1 mb-5">Board: {repoName}</h1>
+      <h2 className="h2 mb-5">Board: {repoName}</h2>
       <div className="grid grid-cols-4 gap-6">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           {lists.map((el, ind) => (
