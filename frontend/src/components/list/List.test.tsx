@@ -33,8 +33,8 @@ describe('List', () => {
   });
 
   test('renders list name', async () => {
-    const name = screen.queryByTestId('list-name');
-    expect(name?.innerText).toBe(list.title);
+    const name = screen.getByTestId('list-name');
+    expect(name.textContent).toBe(list.title);
   });
 
   test('renders cards', () => {

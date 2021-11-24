@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactNode } from 'react';
-import { Link, HashRouter as Router } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (

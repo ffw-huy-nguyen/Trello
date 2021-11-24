@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import 'regenerator-runtime/runtime';
 import RepoDetail from './RepoDetail';
 import user from '@testing-library/user-event';
-
+import { HashRouter as Router } from 'react-router-dom';
 global.confirm = jest.fn(() => true);
 const item = {
   id: 'uuid-1111',
@@ -15,8 +15,15 @@ const item = {
 const mockOnDeleted = jest.fn((data) => data);
 
 describe('RepoDetail', () => {
+  beforeEach(() => {
+    render(
+      <Router>
+        <RepoDetail {...item} onDeleted={mockOnDeleted} />
+      </Router>
+    );
+  });
   test('renders repo name and buttons', () => {
-    render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
+    //render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
     const name = screen.getByTestId('repo-name');
     expect(name.textContent).toBe(item.name);
 
@@ -28,7 +35,7 @@ describe('RepoDetail', () => {
   });
 
   test('renders editing form', async () => {
-    render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
+    //render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
 
     const editingForm = screen.queryByTestId('editing-form');
     expect(editingForm).not.toBeInTheDocument();
@@ -41,7 +48,7 @@ describe('RepoDetail', () => {
   });
 
   test('deleting item', async () => {
-    render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
+    //render(<RepoDetail {...item} onDeleted={mockOnDeleted} />);
     const deleteBtn = screen.getByTestId('delete-btn');
     user.click(deleteBtn);
     expect(global.confirm).toHaveBeenCalledTimes(1);

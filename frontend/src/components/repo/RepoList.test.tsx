@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import 'regenerator-runtime/runtime';
 import RepoList from './RepoList';
+import { HashRouter as Router } from 'react-router-dom';
 
 global.confirm = jest.fn(() => true);
 const repos = [
@@ -17,12 +18,20 @@ const mockHandleUpdateRepos = jest.fn((data) => data);
 
 describe('RepoList', () => {
   test('renders blank if no repo', () => {
-    render(<RepoList repos={[]} handleUpdateRepos={mockHandleUpdateRepos} />);
+    render(
+      <Router>
+        <RepoList repos={[]} handleUpdateRepos={mockHandleUpdateRepos} />
+      </Router>
+    );
     expect(screen.queryByText('There is no repo.')).toBeInTheDocument();
   });
 
   test('renders repo list', () => {
-    render(<RepoList repos={repos} handleUpdateRepos={mockHandleUpdateRepos} />);
+    render(
+      <Router>
+        <RepoList repos={repos} handleUpdateRepos={mockHandleUpdateRepos} />
+      </Router>
+    );
     expect(screen.queryByText('There is no repo.')).not.toBeInTheDocument();
 
     const listRepo = screen.getByTestId('repo-list');
