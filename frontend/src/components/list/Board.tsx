@@ -34,7 +34,7 @@ const Board = (): JSX.Element => {
     }
     if (
       getListTitle(source.droppableId) === 'Confirmed' &&
-      getListTitle(destination.droppableId) !== 'Fixed'
+      ['Confirmed', 'Fixed'].indexOf(getListTitle(destination.droppableId)) === -1
     ) {
       alert('You are only allowed to move Confirmed card to Fixed.');
       return;
