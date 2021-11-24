@@ -32,6 +32,13 @@ const Board = (): JSX.Element => {
     if (!destination) {
       return;
     }
+    if (
+      getListTitle(source.droppableId) === 'Confirmed' &&
+      getListTitle(destination.droppableId) !== 'Fixed'
+    ) {
+      alert('You are only allowed to move Confirmed card to Fixed.');
+      return;
+    }
     handleMoveCard(destination, source, draggableId);
   };
 
@@ -45,6 +52,10 @@ const Board = (): JSX.Element => {
   ): Promise<void> => {
     const newBoard = await API.moveCard(draggableId, destination, source, id);
     setLists(newBoard.lists);
+  };
+
+  const getListTitle = (listId: string): string => {
+    return lists.find((item) => item.id == listId)?.title || '';
   };
   return (
     <div>

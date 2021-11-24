@@ -24,6 +24,8 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
     setListCards(listCards.filter((card) => card.id !== id));
   };
 
+  const isDragDisabled = !!(['False Positive', 'Fixed'].indexOf(title) > -1);
+
   return (
     <>
       <div className="bg-grey p-5 rounded">
@@ -32,7 +34,13 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {listCards.map((item, index) => (
-                <Card onDeleted={handleDeletedCard} {...item} index={index} key={item.id} />
+                <Card
+                  onDeleted={handleDeletedCard}
+                  isDragDisabled={isDragDisabled}
+                  {...item}
+                  index={index}
+                  key={item.id}
+                />
               ))}
               {provided.placeholder}
             </div>

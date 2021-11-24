@@ -12,8 +12,9 @@ export interface ICard {
 interface ICardDetail extends ICard {
   onDeleted(id: string): void;
   index: number;
+  isDragDisabled: boolean;
 }
-const Card = ({ text, id, onDeleted, index }: ICardDetail): JSX.Element => {
+const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.Element => {
   const [editing, setEditing] = useState(false);
   const [cardName, setCardName] = useState(text);
 
@@ -30,7 +31,7 @@ const Card = ({ text, id, onDeleted, index }: ICardDetail): JSX.Element => {
     setEditing(false);
   };
   return (
-    <Draggable key={id} draggableId={id} index={index}>
+    <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <div className="bg-white shadow-lg p-10 rounded-lg mb-5">
