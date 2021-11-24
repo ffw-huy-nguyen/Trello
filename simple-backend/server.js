@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-const bodyParser = require('body-parser');
-const express = require('express');
-const cors = require('cors');
-const Joi = require('joi');
-const uuid = require('uuid');
+const bodyParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
+const Joi = require("joi");
+const uuid = require("uuid");
 
-const { PORT } = require('./config');
-const reposFixture = require('./repos');
+const { PORT } = require("./config");
+const reposFixture = require("./repos");
 
 const app = express();
 
@@ -18,7 +18,7 @@ function makeRepo(name, lists = []) {
   return {
     name,
     id: uuid.v4(),
-    lists
+    lists,
   };
 }
 
@@ -26,41 +26,55 @@ function makeList(title, cards = []) {
   return {
     title,
     cards,
-    id: uuid.v4()
+    id: uuid.v4(),
   };
 }
 
 function makeCard(text) {
   return {
     text,
-    id: uuid.v4()
+    id: uuid.v4(),
   };
 }
 
-
 let REPOS = reposFixture;
 
-app.get('/api/repo', (req, res) => res.json({ repos: REPOS }));
+app.get("/api/repo", (req, res) => res.json({ repos: REPOS }));
 
-app.get('/api/repo/:id', (req, res, next) => {
-  const repo = REPOS.find(item => item.id === req.params.id);
+app.get("/api/repo/:id", (req, res, next) => {
+  const repo = REPOS.find((item) => item.id === req.params.id);
   if (!repo) {
-    const err = new Error('Not Found');
+    const err = new Error("Not Found");
     err.status = 404;
     return next(err);
   }
   return res.json(repo);
 });
 
-app.post('/api/repo', (req, res, next) => {
+app.post("/api/repo/:id/move-card", (req, res) => {
+  const repo = REPOS.find((item) => item.id === req.params.id);
+  if (!repo) {
+    const err = new Error("Not Found");
+    err.status = 404;
+    return next(err);
+  }
+
+  const sourceList = findList(req.body.source.droppableId);
+  const cardIndex = req.body.source.index;
+  const cardDetail = sourceList.cards[cardIndex];
+  sourceList.cards.splice(cardIndex, 1);
+  const destinationList = findList(req.body.destination.droppableId);
+  destinationList.cards.splice(req.body.destination.index, 0, cardDetail);
+
+  return res.json(repo);
+});
+app.post("/api/repo", (req, res, next) => {
   const repoSchema = Joi.object().keys({
-    name: Joi.string()
-      .min(1)
-      .required()
+    name: Joi.string().min(1).required(),
   });
   const { error: validationError } = Joi.validate(req.body, repoSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     return next(err);
   }
@@ -69,44 +83,45 @@ app.post('/api/repo', (req, res, next) => {
   return res.status(201).json(repo);
 });
 
-app.delete('/api/repo/:id', (req, res) => {
-  REPOS = REPOS.filter(repo => repo.id !== req.params.id);
+app.delete("/api/repo/:id", (req, res) => {
+  REPOS = REPOS.filter((repo) => repo.id !== req.params.id);
   return res.status(204).send();
 });
 
-app.put('/api/repo/:id', (req, res, next) => {
+app.put("/api/repo/:id", (req, res, next) => {
   const repoSchema = Joi.object().keys({
     name: Joi.string().required(),
-    id: Joi.string().required()
+    id: Joi.string().required(),
   });
   const { error: validationError } = Joi.validate(req.body, repoSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     return next(err);
   }
   if (req.params.id !== req.body.id) {
-    const err = new Error(`Request path id (${req.params.id}) and request body id (${
-      req.body.id}) must match`);
+    const err = new Error(
+      `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`
+    );
     err.status = 400;
     return next(err);
   }
-  const repo = REPOS.find(item => item.id === req.params.id);
+  const repo = REPOS.find((item) => item.id === req.params.id);
   if (!repo) {
-    const err = new Error('Repo not found');
+    const err = new Error("Repo not found");
     err.status = 404;
-    return next(err);  
+    return next(err);
   }
   repo.name = req.body.name;
   return res.status(204).send();
 });
 
-app.get('/api/repo/:id/list', (req, res, next) => {
-  const repo = REPOS.find(item => item.id === req.params.id);
+app.get("/api/repo/:id/list", (req, res, next) => {
+  const repo = REPOS.find((item) => item.id === req.params.id);
   if (!repo) {
-    const err = new Error('Not found');
+    const err = new Error("Not found");
     err.status = 404;
-    return next(err);  
+    return next(err);
   }
   return res.json({ lists: repo.lists });
 });
@@ -114,7 +129,7 @@ app.get('/api/repo/:id/list', (req, res, next) => {
 function findList(listId, repos = REPOS) {
   let list = null;
   for (let repo of repos) {
-    list = repo.lists.find(list => list.id === listId);
+    list = repo.lists.find((list) => list.id === listId);
     if (list) {
       break;
     }
@@ -122,29 +137,29 @@ function findList(listId, repos = REPOS) {
   return list;
 }
 
-app.get('/api/list/:id', (req, res, next) => {
+app.get("/api/list/:id", (req, res, next) => {
   const list = findList(req.params.id);
   if (!list) {
-    const err = new Error('List not found');
+    const err = new Error("List not found");
     err.status = 404;
-    return next(err);  
+    return next(err);
   }
   return res.json(list);
 });
 
-app.post('/api/repo/:repoId/list', (req, res, next) => {
-  const repo = REPOS.find(item => item.id === req.params.repoId);
+app.post("/api/repo/:repoId/list", (req, res, next) => {
+  const repo = REPOS.find((item) => item.id === req.params.repoId);
   if (!repo) {
-    const err = new Error('Repo not found');
+    const err = new Error("Repo not found");
     err.status = 404;
-    return next(err);  
+    return next(err);
   }
   const listSchema = Joi.object().keys({
-    title: Joi.string().required()
+    title: Joi.string().required(),
   });
   const { error: validationError } = Joi.validate(req.body, listSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     return next(err);
   }
@@ -153,9 +168,9 @@ app.post('/api/repo/:repoId/list', (req, res, next) => {
   return res.status(201).json(list);
 });
 
-app.delete('/api/list/:id', (req, res) => {
+app.delete("/api/list/:id", (req, res) => {
   for (let repo of REPOS) {
-    const listIndex = repo.lists.findIndex(list => list.id === req.params.id);
+    const listIndex = repo.lists.findIndex((list) => list.id === req.params.id);
     if (listIndex >= 0) {
       repo.lists.splice(listIndex, 1);
       break;
@@ -164,27 +179,25 @@ app.delete('/api/list/:id', (req, res) => {
   return res.status(204).send();
 });
 
-app.put('/api/list/:id', (req, res, next) => {
+app.put("/api/list/:id", (req, res, next) => {
   const list = findList(req.params.id);
   if (!list) {
-    const err = new Error('List not found');
+    const err = new Error("List not found");
     err.status = 404;
     return next(err);
   }
   const listSchema = Joi.object().keys({
     title: Joi.string().required(),
-    id: Joi.string().required()
+    id: Joi.string().required(),
   });
   const { error: validationError } = Joi.validate(req.body, listSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     return next(err);
   }
   if (req.params.id !== req.body.id) {
-    const message = `Request path id (${req.params.id}) and request body id (${
-      req.body.id
-    }) must match`;
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
     const err = new Error(message);
     err.status = 400;
     return next(err);
@@ -193,10 +206,10 @@ app.put('/api/list/:id', (req, res, next) => {
   return res.status(204).send();
 });
 
-app.get('/api/list/:id/card', (req, res, next) => {
+app.get("/api/list/:id/card", (req, res, next) => {
   const list = findList(req.params.id);
   if (!list) {
-    const err = new Error('List not found');
+    const err = new Error("List not found");
     err.status = 404;
     next(err);
   }
@@ -207,7 +220,7 @@ function getCard(cardId, repos = REPOS) {
   let card = null;
   for (let repo of repos) {
     for (let list of repo.lists) {
-      card = list.cards.find(card => card.id === cardId);
+      card = list.cards.find((card) => card.id === cardId);
       if (card) {
         break;
       }
@@ -216,29 +229,29 @@ function getCard(cardId, repos = REPOS) {
   return card;
 }
 
-app.get('/api/card/:id', (req, res, next) => {
+app.get("/api/card/:id", (req, res, next) => {
   const card = getCard(req.params.id);
   if (!card) {
-    const err = new Error('Card not found');
+    const err = new Error("Card not found");
     err.status = 404;
     next(err);
   }
   res.json(card);
 });
 
-app.post('/api/list/:id/card', (req, res, next) => {
+app.post("/api/list/:id/card", (req, res, next) => {
   const list = findList(req.params.id);
   if (!list) {
-    const err = new Error('List not found');
+    const err = new Error("List not found");
     err.status = 404;
     next(err);
   }
   const cardSchema = Joi.object().keys({
-    text: Joi.string().required()
+    text: Joi.string().required(),
   });
   const { error: validationError } = Joi.validate(req.body, cardSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     next(err);
   }
@@ -247,10 +260,12 @@ app.post('/api/list/:id/card', (req, res, next) => {
   res.status(201).json(card);
 });
 
-app.delete('/api/card/:id', (req, res) => {
+app.delete("/api/card/:id", (req, res) => {
   for (let repo of REPOS) {
     for (let list of repo.lists) {
-      const cardIndex = list.cards.findIndex(card => card.id === req.params.id);
+      const cardIndex = list.cards.findIndex(
+        (card) => card.id === req.params.id
+      );
       if (cardIndex) {
         list.cards.splice(cardIndex, 1);
         break;
@@ -260,21 +275,19 @@ app.delete('/api/card/:id', (req, res) => {
   res.status(204).send();
 });
 
-app.put('/api/card/:id', (req, res, next) => {
+app.put("/api/card/:id", (req, res, next) => {
   const cardSchema = Joi.object().keys({
     text: Joi.string().required(),
-    id: Joi.string().required()
+    id: Joi.string().required(),
   });
   const { error: validationError } = Joi.validate(req.body, cardSchema);
   if (validationError) {
-    const err = new Error('Bad request');
+    const err = new Error("Bad request");
     err.status = 400;
     return next(err);
   }
   if (req.params.id !== req.body.id) {
-    const message = `Request path id (${req.params.id}) and request body id (${
-      req.body.id
-    }) must match`;
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
 
     const err = new Error(message);
     err.status = 400;
@@ -282,7 +295,7 @@ app.put('/api/card/:id', (req, res, next) => {
   }
   const card = getCard(req.params.id);
   if (!card) {
-    const err = new Error('Card not found');
+    const err = new Error("Card not found");
     err.status = 404;
     return next(err);
   }
@@ -290,23 +303,20 @@ app.put('/api/card/:id', (req, res, next) => {
   return res.status(204).send();
 });
 
-app.use(function(req, res, next) {
-  const err = new Error('Not Found');
+app.use(function (req, res, next) {
+  const err = new Error("Not Found");
   err.status = 404;
   return next(err);
 });
 
 // Catch-all Error handler
 // Add NODE_ENV check to prevent stacktrace leak
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   return res.json({
     message: err.message,
-    error: app.get('env') === 'development' ? err : {}
+    error: app.get("env") === "development" ? err : {},
   });
 });
 
-
-app.listen(PORT, () =>
-  console.log(`Your app is listening on port ${PORT}`)
-);
+app.listen(PORT, () => console.log(`Your app is listening on port ${PORT}`));
