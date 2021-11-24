@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { IBaseApi } from '../../api/Base';
-import { IItem } from '../../interfaces/global.interface';
 
 const InputField = ({
   id,
@@ -9,7 +8,6 @@ const InputField = ({
   onUpdated,
   onCanceled,
   editing,
-  api,
   inputName
 }: {
   id: string;
