@@ -5,9 +5,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="container mx-auto">
       <h1 className="font-bold text-3xl py-4 text-orange uppercase">
-        <Router>
-          <Link to="/">Guard Rail IO</Link>
-        </Router>
+        <Link to="/">Guard Rail IO</Link>
       </h1>
       <main role="main">{children}</main>
     </div>

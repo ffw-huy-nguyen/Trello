@@ -29,10 +29,12 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
   return (
     <>
       <div className="bg-grey p-5 rounded">
-        <h3 className="font-bold text-xl mb-5">{title}</h3>
+        <h3 data-testid="list-name" className="font-bold text-xl mb-5">
+          {title}
+        </h3>
         <Droppable key={index} droppableId={id}>
           {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div data-testid="list-card" ref={provided.innerRef} {...provided.droppableProps}>
               {listCards.map((item, index) => (
                 <Card
                   onDeleted={handleDeletedCard}
@@ -46,7 +48,9 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
             </div>
           )}
         </Droppable>
-        <ItemForm onCreated={handleCreatedNewCard} id="" name="" inputName="Card" api={API} />
+        <div data-testid="creating-form">
+          <ItemForm onCreated={handleCreatedNewCard} id="" name="" inputName="Card" api={API} />
+        </div>
       </div>
     </>
   );
