@@ -27,34 +27,35 @@ const Board = (): JSX.Element => {
   }, []);
 
   const handleOnDragEnd = (result: DropResult) => {
+    console.log(result);
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
     }
-    handleMoveCard(destination?.droppableId, source.droppableId, draggableId);
+    handleMoveCard(destination, source, draggableId);
   };
 
   const handleMoveCard = async (
-    destination?: string,
-    source?: string,
+    destination?: {
+      droppableId: string;
+      index: number;
+    },
+    source?: { droppableId: string; index: number },
     draggableId?: string
   ): Promise<void> => {
-    if (destination !== source) {
-      const newBoard = await API.moveCard(draggableId, destination, source, id);
-      console.log(newBoard.lists);
-      setLists(newBoard.lists);
-    }
+    const newBoard = await API.moveCard(draggableId, destination, source, id);
+    setLists(newBoard.lists);
   };
   return (
     <div>
       <h1 className="h1 mb-5">Board: {repoName}</h1>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <div className="grid grid-cols-4 gap-6">
-          {lists.map((list) => {
-            return <List {...list} key={list.id} />;
-          })}
-        </div>
-      </DragDropContext>
+      <div className="grid grid-cols-4 gap-6">
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          {lists.map((el, ind) => (
+            <List {...el} index={ind} key={el.id} />
+          ))}
+        </DragDropContext>
+      </div>
     </div>
   );
 };

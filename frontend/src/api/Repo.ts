@@ -5,11 +5,16 @@ class Repo extends Base {
     super('repo');
   }
 
-  async moveCard(cardId?: string, destinationId?: string, sourceId?: string, repoId?: string) {
+  async moveCard(
+    cardId?: string,
+    destination?: { droppableId: string; index: number },
+    source?: { droppableId: string; index: number },
+    repoId?: string
+  ) {
     const res = await this.http.post(`/repo/${repoId}/move-card`, {
       cardId,
-      destinationId,
-      sourceId,
+      destination,
+      source,
       repoId
     });
     return res.data;
