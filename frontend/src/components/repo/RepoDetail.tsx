@@ -3,7 +3,8 @@ import { IRepo } from './Repo';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import API from '../../api/Repo';
 import ItemForm from '../field/InputField';
-import { Link } from 'react-router-dom';
+import { Link, HashRouter as Router } from 'react-router-dom';
+
 interface IRepoDetail extends IRepo {
   onDeleted(id: string): void;
 }
@@ -27,7 +28,9 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
     <div className="bg-white shadow-lg p-10 rounded-lg mb-5 flex justify-between">
       <div>
         <h3 data-testid="repo-name" className="text-2xl font-bold">
-          <Link to={`/${id}`}>{repoName}</Link>
+          <Router>
+            <Link to={`/${id}`}>{repoName}</Link>
+          </Router>
         </h3>
         {editing && (
           <>

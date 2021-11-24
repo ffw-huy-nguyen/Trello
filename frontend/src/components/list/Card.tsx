@@ -12,7 +12,7 @@ export interface ICard {
 interface ICardDetail extends ICard {
   onDeleted(id: string): void;
   index: number;
-  isDragDisabled: boolean;
+  isDragDisabled?: boolean;
 }
 const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.Element => {
   const [editing, setEditing] = useState(false);
@@ -37,7 +37,7 @@ const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.
           <div className="bg-white shadow-lg p-10 rounded-lg mb-5">
             <div className=" flex justify-between">
               <div>
-                <h3 data-testid="repo-name" className="text-2xl font-bold">
+                <h3 data-testid="card-name" className="text-2xl font-bold">
                   {cardName}
                 </h3>
               </div>
