@@ -38,29 +38,25 @@ const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}>
-          <div className="card-detail bg-white shadow-lg p-10 rounded-lg mb-5">
-            <div className=" flex justify-between">
-              <div>
-                <h3 data-testid="card-name" className="text-2xl font-bold">
-                  {cardName}
-                </h3>
-              </div>
+          <div className="card-detail bg-white shadow-lg p-10 rounded-lg mb-5 relative">
+            <h3 data-testid="card-name" className="font-bold">
+              {cardName}
+            </h3>
 
-              <div className="text-orange">
-                <button
-                  className="mr-2"
-                  aria-label={`Update ${cardName} card.`}
-                  onClick={() => setEditing(true)}
-                  data-testid="update-btn">
-                  <FaEdit />
-                </button>
-                <button
-                  aria-label={`Delete ${cardName} card.`}
-                  data-testid="delete-btn"
-                  onClick={handleDeleteCard}>
-                  <FaTrash />
-                </button>
-              </div>
+            <div className="text-orange absolute top-1 right-2">
+              <button
+                className="mr-2"
+                aria-label={`Update ${cardName} card.`}
+                onClick={() => setEditing(true)}
+                data-testid="update-btn">
+                <FaEdit />
+              </button>
+              <button
+                aria-label={`Delete ${cardName} card.`}
+                data-testid="delete-btn"
+                onClick={handleDeleteCard}>
+                <FaTrash />
+              </button>
             </div>
             {editing && (
               <>
