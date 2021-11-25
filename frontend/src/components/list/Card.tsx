@@ -33,8 +33,12 @@ const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-          <div className="bg-white shadow-lg p-10 rounded-lg mb-5">
+        <div
+          data-testid="card-detail"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}>
+          <div className="card-detail bg-white shadow-lg p-10 rounded-lg mb-5">
             <div className=" flex justify-between">
               <div>
                 <h3 data-testid="card-name" className="text-2xl font-bold">

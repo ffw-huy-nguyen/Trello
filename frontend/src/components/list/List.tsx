@@ -28,7 +28,7 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
 
   return (
     <>
-      <div className="bg-grey p-5 rounded">
+      <div className="bg-grey p-5 rounded" data-testid={title}>
         <h3 data-testid="list-name" className="font-bold text-xl mb-5">
           {title}
         </h3>

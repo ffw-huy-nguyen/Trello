@@ -3,27 +3,18 @@
 
 const Page = require('./page');
 
-class HomePage extends Page {
-  get inputRepoName() {
-    return $('[data-testid="input-field"]');
+class BoardPage extends Page {
+  async createCard(cardName, listName = 'Open') {
+    const inputCard = await $(`[data-testid="${listName}"] [data-testid="input-field"]`);
+    const btnSubmit = await $(`[data-testid="${listName}"] [data-testid="save-button"]`);
+    await inputCard.setValue(cardName);
+    await btnSubmit.click();
   }
 
-  get btnSubmit() {
-    return $('[data-testid="save-button"]');
-  }
-
-  get repoItems() {
-    return $$('.repo-detail');
-  }
-
-  async createRepo(repoName) {
-    await this.inputRepoName.setValue(repoName);
-    await this.btnSubmit.click();
-  }
-
-  open() {
-    return super.open('');
+  async countCard(listName = 'Open') {
+    const cards = await $$(`[data-testid="${listName}"] .card-detail`);
+    return cards.length;
   }
 }
 
-module.exports = new HomePage();
+module.exports = new BoardPage();
