@@ -16,7 +16,7 @@ const lists = ['Open', 'Confirmed', 'False Positive', 'Fixed'];
 const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
   const handleCreatedNewRepo = async (name: string): Promise<void> => {
     const newItem = await API.createItem<IItem, { name: string }>({ name });
-    handleUpdateRepos([...repos, newItem]);
+    handleUpdateRepos([newItem, ...repos]);
     lists.forEach(async (title) => {
       await ListAPI.createList({ repoID: newItem.id, title: title });
     });

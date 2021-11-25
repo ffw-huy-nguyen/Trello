@@ -79,7 +79,7 @@ app.post("/api/repo", (req, res, next) => {
     return next(err);
   }
   const repo = makeRepo(req.body.name);
-  REPOS.push(repo);
+  REPOS.unshift(repo);
   return res.status(201).json(repo);
 });
 
