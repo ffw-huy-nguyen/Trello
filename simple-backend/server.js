@@ -79,9 +79,18 @@ app.post("/api/repo", (req, res, next) => {
     return next(err);
   }
   const repo = makeRepo(req.body.name);
-  REPOS.unshift(repo);
+  REPOS.unshift(createListForRepo(repo));
   return res.status(201).json(repo);
 });
+
+function createListForRepo(repo) {
+  ["Open", "Confirmed", "False Positive", "Fixed"].forEach((title) => {
+    const list = makeList(title);
+    repo.lists.push(list);
+  });
+
+  return repo;
+}
 
 app.delete("/api/repo/:id", (req, res) => {
   REPOS = REPOS.filter((repo) => repo.id !== req.params.id);

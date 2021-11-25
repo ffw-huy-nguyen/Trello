@@ -3,8 +3,6 @@ import { IRepo } from './Repo';
 import RepoDetail from './RepoDetail';
 import ItemForm from '../field/InputField';
 import API from '../../api/Repo';
-import ListAPI from '../../api/List';
-
 import { IItem } from '../../interfaces/global.interface';
 
 interface IRepoList {
@@ -12,14 +10,10 @@ interface IRepoList {
   handleUpdateRepos(repos: IRepo[]): void;
 }
 
-const lists = ['Open', 'Confirmed', 'False Positive', 'Fixed'];
 const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
   const handleCreatedNewRepo = async (name: string): Promise<void> => {
     const newItem = await API.createItem<IItem, { name: string }>({ name });
     handleUpdateRepos([newItem, ...repos]);
-    lists.forEach(async (title) => {
-      await ListAPI.createList({ repoID: newItem.id, title: title });
-    });
   };
 
   const handleDeletedRepo = (id: string): void => {
