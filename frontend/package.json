@@ -68,6 +68,7 @@
         "classnames": "^2.3.1",
         "dotenv": "^10.0.0",
         "dotenv-webpack": "^7.0.3",
+        "html-dnd": "^1.2.1",
         "node-polyfill-webpack-plugin": "^1.1.4",
         "react": "^17.0.2",
         "react-beautiful-dnd": "^13.1.0",

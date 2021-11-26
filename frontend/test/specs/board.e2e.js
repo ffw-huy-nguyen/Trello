@@ -32,4 +32,12 @@ describe('Board page', () => {
     await BoardPage.createCard(`Card - ${listName}`, listName);
     expect(await BoardPage.countCard(listName)).toEqual(currentCardNumber + 1);
   });
+
+  it('should update card ', async () => {
+    await RepoPage.open();
+    await RepoPage.viewBoard();
+    const updatedName = 'Updated name';
+    await BoardPage.updateCard(updatedName);
+    expect(await BoardPage.cardDetailName).toEqual(updatedName);
+  });
 });
