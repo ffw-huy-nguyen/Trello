@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  web-app:
+    container_name: web-app
+    build: ./frontend
+    ports:
+        - "${FRONTEND_PORT}:80"
+  backend-app:
+    container_name: backend-app
+    build: ./simple-backend
+    ports:
+        - "${BACKEND_PORT}:8080"
