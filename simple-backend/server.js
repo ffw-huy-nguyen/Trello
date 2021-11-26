@@ -231,7 +231,7 @@ function getCard(cardId, repos = REPOS) {
     for (let list of repo.lists) {
       card = list.cards.find((card) => card.id === cardId);
       if (card) {
-        break;
+        return card;
       }
     }
   }
