@@ -6,19 +6,22 @@ import 'regenerator-runtime/runtime';
 import RepoDetail from './RepoDetail';
 import user from '@testing-library/user-event';
 import { HashRouter as Router } from 'react-router-dom';
+import BaseApi from '../../api/Base';
+
 global.confirm = jest.fn(() => true);
 const item = {
   id: 'uuid-1111',
   name: 'Item 1'
 };
-
+jest.mock('../../api/Base');
+const mockApi = new BaseApi('test');
 const mockOnDeleted = jest.fn((data) => data);
 
 describe('RepoDetail', () => {
   beforeEach(() => {
     render(
       <Router>
-        <RepoDetail {...item} onDeleted={mockOnDeleted} />
+        <RepoDetail {...item} api={mockApi} onDeleted={mockOnDeleted} />
       </Router>
     );
   });

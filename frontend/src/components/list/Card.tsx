@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import API from '../../api/Card';
 import InputField from '../field/InputField';
 import moment from 'moment';
+import { IBaseApi } from '../../api/Base';
 
 export interface ICard {
   text: string;
@@ -15,21 +15,30 @@ interface ICardDetail extends ICard {
   onDeleted(id: string): void;
   index: number;
   isDragDisabled?: boolean;
+  api: IBaseApi;
 }
-const Card = ({ text, id, date, onDeleted, index, isDragDisabled }: ICardDetail): JSX.Element => {
+const Card = ({
+  text,
+  id,
+  date,
+  onDeleted,
+  api,
+  index,
+  isDragDisabled
+}: ICardDetail): JSX.Element => {
   const [editing, setEditing] = useState(false);
   const [cardName, setCardName] = useState(text);
   const [cardDate, setCardDate] = useState(date);
 
   const handleDeleteCard = async (): Promise<void> => {
     if (confirm(`Are you sure you want to delete ${text} card?`)) {
-      await API.deleteItem(id);
+      await api.deleteItem(id);
       onDeleted(id);
     }
   };
 
   const handleUpdatedCard = async (name: string): Promise<void> => {
-    const updatedCard = await API.updateItem<{ date: string }, { text: string; id: string }>(id, {
+    const updatedCard = await api.updateItem<{ date: string }, { text: string; id: string }>(id, {
       text: name,
       id
     });
@@ -80,7 +89,7 @@ const Card = ({ text, id, date, onDeleted, index, isDragDisabled }: ICardDetail)
                     onUpdated={handleUpdatedCard}
                     onCanceled={() => setEditing(false)}
                     inputName="card"
-                    api={API}
+                    api={api}
                   />
                 </div>
               </>

@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-
 import '@testing-library/jest-dom';
 import 'regenerator-runtime/runtime';
 import Card from './Card';
 import user from '@testing-library/user-event';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import BaseApi from '../../api/Base';
 
 global.confirm = jest.fn(() => true);
 const item = {
@@ -13,6 +13,8 @@ const item = {
   text: 'Item 1',
   index: 0
 };
+jest.mock('../../api/Base');
+const mockApi = new BaseApi('test');
 
 const mockOnDeleted = jest.fn((data) => data);
 const handleOnDragEnd = jest.fn();
@@ -23,7 +25,7 @@ describe('Card detail', () => {
         <Droppable key={0} droppableId={'1'}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              <Card {...item} onDeleted={mockOnDeleted} />
+              <Card {...item} onDeleted={mockOnDeleted} api={mockApi} />
             </div>
           )}
         </Droppable>

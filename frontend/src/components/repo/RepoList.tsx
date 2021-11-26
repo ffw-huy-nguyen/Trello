@@ -26,7 +26,14 @@ const RepoList = ({ repos, handleUpdateRepos }: IRepoList): JSX.Element => {
         {repos.length > 0 ? (
           <>
             {repos.map((item) => {
-              return <RepoDetail onDeleted={handleDeletedRepo} {...item} key={`repo_${item.id}`} />;
+              return (
+                <RepoDetail
+                  onDeleted={handleDeletedRepo}
+                  api={API}
+                  {...item}
+                  key={`repo_${item.id}`}
+                />
+              );
             })}
           </>
         ) : (

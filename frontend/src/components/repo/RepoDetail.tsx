@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import { IRepo } from './Repo';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import API from '../../api/Repo';
 import ItemForm from '../field/InputField';
 import { Link } from 'react-router-dom';
+import { IBaseApi } from '../../api/Base';
 
 interface IRepoDetail extends IRepo {
   onDeleted(id: string): void;
+  api: IBaseApi;
 }
-const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
+const RepoDetail = ({ id, name, onDeleted, api }: IRepoDetail): JSX.Element => {
   const [editing, setEditing] = useState(false);
   const [repoName, setRepoName] = useState(name);
 
   const handleDeleteRepo = async (): Promise<void> => {
     if (confirm(`Are you sure you want to delete ${name} repo?`)) {
-      await API.deleteItem(id);
+      await api.deleteItem(id);
       onDeleted(id);
     }
   };
 
   const handleUpdatedRepo = async (name: string): Promise<void> => {
-    await API.updateItem(id, { id, name });
+    await api.updateItem(id, { id, name });
     setRepoName(name);
     setEditing(false);
   };
@@ -40,7 +41,7 @@ const RepoDetail = ({ id, name, onDeleted }: IRepoDetail): JSX.Element => {
                 onUpdated={handleUpdatedRepo}
                 onCanceled={() => setEditing(false)}
                 inputName="Repo"
-                api={API}
+                api={api}
               />
             </div>
           </>

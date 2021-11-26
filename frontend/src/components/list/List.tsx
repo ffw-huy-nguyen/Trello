@@ -42,6 +42,7 @@ const List = ({ cards, id, title, index }: IList): JSX.Element => {
                   {...item}
                   index={index}
                   key={item.id}
+                  api={API}
                 />
               ))}
               {provided.placeholder}
