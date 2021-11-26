@@ -3,10 +3,12 @@ import { Draggable } from 'react-beautiful-dnd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import API from '../../api/Card';
 import InputField from '../field/InputField';
+import moment from 'moment';
 
 export interface ICard {
   text: string;
   id: string;
+  date?: string;
 }
 
 interface ICardDetail extends ICard {
@@ -14,9 +16,10 @@ interface ICardDetail extends ICard {
   index: number;
   isDragDisabled?: boolean;
 }
-const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.Element => {
+const Card = ({ text, id, date, onDeleted, index, isDragDisabled }: ICardDetail): JSX.Element => {
   const [editing, setEditing] = useState(false);
   const [cardName, setCardName] = useState(text);
+  const [cardDate, setCardDate] = useState(date);
 
   const handleDeleteCard = async (): Promise<void> => {
     if (confirm(`Are you sure you want to delete ${text} card?`)) {
@@ -26,8 +29,12 @@ const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.
   };
 
   const handleUpdatedCard = async (name: string): Promise<void> => {
-    await API.updateItem(id, { text: name, id });
+    const updatedCard = await API.updateItem<{ date: string }, { text: string; id: string }>(id, {
+      text: name,
+      id
+    });
     setCardName(name);
+    setCardDate(updatedCard.date);
     setEditing(false);
   };
   return (
@@ -42,6 +49,11 @@ const Card = ({ text, id, onDeleted, index, isDragDisabled }: ICardDetail): JSX.
             <h3 data-testid="card-name" className="font-bold">
               {cardName}
             </h3>
+            {cardDate && (
+              <p className="text-xs mt-4">
+                Updated at: {moment(cardDate).format('Do MMM YYYY - H:m')}
+              </p>
+            )}
 
             <div className="text-orange absolute top-1 right-2">
               <button

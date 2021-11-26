@@ -34,6 +34,7 @@ function makeCard(text) {
   return {
     text,
     id: uuid.v4(),
+    date: new Date(),
   };
 }
 
@@ -64,7 +65,10 @@ app.post("/api/repo/:id/move-card", (req, res) => {
   const cardDetail = sourceList.cards[cardIndex];
   sourceList.cards.splice(cardIndex, 1);
   const destinationList = findList(req.body.destination.droppableId);
-  destinationList.cards.splice(req.body.destination.index, 0, cardDetail);
+  destinationList.cards.splice(req.body.destination.index, 0, {
+    ...cardDetail,
+    date: new Date(),
+  });
 
   return res.json(repo);
 });
@@ -235,7 +239,7 @@ function getCard(cardId, repos = REPOS) {
       }
     }
   }
-  return card;
+  //return card;
 }
 
 app.get("/api/card/:id", (req, res, next) => {
@@ -309,7 +313,8 @@ app.put("/api/card/:id", (req, res, next) => {
     return next(err);
   }
   card.text = req.body.text;
-  return res.status(204).send();
+  card.date = new Date();
+  return res.status(201).send(card);
 });
 
 app.use(function (req, res, next) {
